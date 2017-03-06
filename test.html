@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+
+<script type="text/charlie-lang">
+    log "Hello charlie!"
+</script>
+
+</head>
+<body>
+
+<script type="text/javascript">
+
+    function look_ahead(text_data, current_position, char) {
+        var future_position = -1;
+
+        for (var i = current_position + 1; i < text_data.length; i++) {
+            if (text_data[i] === char) {
+                future_position = i;
+                break;
+            }
+        }
+
+        return future_position;
+    }
+
+    function lexer(text_data) {
+        var lexemes = [];
+        var lexeme ="";
+
+        for (var i = 0; i < text_data.length; i++) {
+
+            if (text_data[i] === "\"") {
+                var tmp_pos = look_ahead(text_data, i, "\"");
+                lexeme = text_data.substring(i+1, tmp_pos);
+                lexemes.push(lexeme);
+                i = tmp_pos;
+                continue;
+            }
+
+            if (text_data[i] === " ") {
+                lexemes.push(lexeme.trim());
+                lexeme = "";
+            }
+
+            lexeme += text_data[i];
+        }
+
+        return lexemes;
+    }
+
+    function parser(lexeme_data) {
+        console.log(lexeme_data);
+        var instructions = [];
+
+        for (var i = 0; i < lexeme_data.length; i++) {
+            
+        }
+
+        return instructions;
+    }
+
+    function execute(instruction_data) {
+        console.log(instruction_data);
+        var exit_code = 0;
+
+        for (var i = 0; i < instruction_data.length; i++) {
+
+        }
+
+        return exit_code;
+    }
+
+    function load_charlie_scripts_from_dom() {
+        var scripts = [];
+
+        for (var i = 0; i < document.scripts.length; i++) {
+            if (document.scripts[i].type === "text/charlie-lang") {
+                scripts.push(document.scripts[i].innerText);
+            }
+        }
+
+        return scripts;
+    }
+
+    function init_charlie_lang() {
+        console.log('>>>initialising charlie-lang');
+        var program_text = load_charlie_scripts_from_dom()[0].trim();
+        var program_lexemes = lexer(program_text)
+        var program_instructions = parser(program_lexemes);
+        execute(program_instructions);
+        console.log('>>>charlie-lang scripts execution complete!');
+    }
+
+    init_charlie_lang();
+</script>
+</body>
+</html>
