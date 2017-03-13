@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+
+    <script type="text/javascript" src="parser.js"></script>
+    
+</head>
+<body>
+<div id="test_script" style="display:none;">
+    log "Hello world"
+    log testVar
+</div>
+<script type="text/javascript">
+    var script = document.getElementById("test_script").innerHTML;
+    var results = CharlieLangParser.parse(script);
+
+    //console.log(results);
+
+    executeInstructions(results);
+
+    function executeInstructions(instructions) {
+        var variables = [];
+
+        instructions.map(function(e) {
+
+            if (e.tokInstr && e.tokInstr === 'log') {
+                var message = null;
+
+                if (e.type && e.type === 'stringInstruction') {
+                    message = e.tokParam;
+                } else if (e.type && e.type === 'variableInstruction') {
+                    var variable = findVariable(e.tokParam);
+
+                    if (variable) {
+                        message = variable.value;
+                    } else {
+                        // throw runtime error
+                        console.error("unknown variable: " + e.tokParam);
+                        return;
+                    }
+                }
+
+                consoleFunc(message);
+            }
+
+            
+        });
+
+        function createVariable(_name, _type, _value) {
+            return {
+                name: _name,
+                type: _type,
+                value: _value
+            };
+        }
+
+        function findVariable(varName) {
+            for (var i = 0; i < variables.length; i++) {
+                if (varName === variables[i].name) {
+                    return variables[i];
+                }
+            }
+
+            return null;
+        }
+    }
+
+    function consoleFunc(message) {
+        console.log(message);
+    }
+</script>
+</body>
+</html>

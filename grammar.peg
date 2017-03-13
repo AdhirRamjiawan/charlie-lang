@@ -1,0 +1,62 @@
+{
+	var INSTRUCTION_INDEX = 1;
+    var VARIABLE_INDEX = 3;
+}
+
+startrule
+ = program
+  
+program
+= (stringInstruction / variableInstruction)+
+  
+stringInstruction
+= i:((whitespace*)? instruction (space+)? stringParam (whitespace*)?) { 
+   var line = i;
+
+    var tokParam = "";
+    var tokInstr = line[INSTRUCTION_INDEX];
+    var type= "stringInstruction";
+
+    line[3][1].map(function(e){
+      e.map(function(ec){
+      tokParam += ec.join("");
+      });
+    });
+
+    return {type, tokInstr,tokParam};
+ }
+ 
+variableInstruction
+= i:((whitespace*)? instruction (space+)? ID (whitespace*)?) { 
+   var line = i;
+
+    var tokParam = line[VARIABLE_INDEX].join("");;
+    var tokInstr = line[INSTRUCTION_INDEX];
+    var type= "variableInstruction";
+    
+    return {type, tokInstr,tokParam};
+ }
+
+word = letter+
+
+letter = [a-zA-Z0-9]
+
+whitespace = " "
+/ "\r"
+/ "\n"
+/ "\t"
+
+space = " "
+
+newline = "\n"
+
+instruction 
+= log
+ /alert
+
+ID = word
+
+stringParam = p:('"' (word (space*)?)* '"') { return p;}
+
+log = "log"
+alert = "alert"
