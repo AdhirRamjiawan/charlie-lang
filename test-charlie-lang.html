@@ -7,14 +7,16 @@
 </head>
 <body>
 <div id="test_script" style="display:none;">
+    testVar = "Adhir Ramjiawan"
+    someOtherMessage = testVar
+
     log "Hello world"
     log testVar
+    alert someOtherMessage
 </div>
 <script type="text/javascript">
     var script = document.getElementById("test_script").innerHTML;
     var results = CharlieLangParser.parse(script);
-
-    //console.log(results);
 
     executeInstructions(results);
 
@@ -41,6 +43,38 @@
                 }
 
                 consoleFunc(message);
+            } else if (e.tokInstr && e.tokInstr === 'alert') {
+                var message = null;
+
+                if (e.type && e.type === 'stringInstruction') {
+                    message = e.tokParam;
+                } else if (e.type && e.type === 'variableInstruction') {
+                    var variable = findVariable(e.tokParam);
+
+                    if (variable) {
+                        message = variable.value;
+                    } else {
+                        // throw runtime error
+                        console.error("unknown variable: " + e.tokParam);
+                        return;
+                    }
+                }
+
+                alertFunc(message);
+            } else if (e.type && e.type === 'variableLiteralAssignmentInstruction') {
+                var newVar = createVariable(e.tokLHS, "literal", e.tokRHS);
+                variables.push(newVar);
+            } else if (e.type && e.type === 'variableVariableAssignmentInstruction') {
+                var newVar = null;
+                var existingVar = findVariable(e.tokRHS);
+
+                if (!existingVar) {
+                    console.error("unknown variable: " + e.tokRHS);
+                    return;
+                }
+
+                newVar = createVariable(e.tokLHS, "literal", existingVar.value);
+                variables.push(newVar);
             }
 
             
@@ -67,6 +101,10 @@
 
     function consoleFunc(message) {
         console.log(message);
+    }
+
+    function alertFunc(message) {
+        alert(message);
     }
 </script>
 </body>
