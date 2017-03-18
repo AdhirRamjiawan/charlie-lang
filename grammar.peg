@@ -7,7 +7,10 @@ startrule
  = program
   
 program
-= (stringInstruction / variableInstruction)+
+= (stringInstruction / 
+	variableInstruction / 
+	variableVariableAssignmentInstruction / 
+	variableLiteralAssignmentInstruction)+
   
 stringInstruction
 = i:((whitespace*)? instruction (space+)? stringParam (whitespace*)?) { 
@@ -30,7 +33,7 @@ variableInstruction
 = i:((whitespace*)? instruction (space+)? ID (whitespace*)?) { 
    var line = i;
 
-    var tokParam = line[VARIABLE_INDEX].join("");;
+    var tokParam = line[VARIABLE_INDEX].join("");
     var tokInstr = line[INSTRUCTION_INDEX];
     var type= "variableInstruction";
     
@@ -49,6 +52,31 @@ whitespace = " "
 space = " "
 
 newline = "\n"
+
+variableVariableAssignmentInstruction = i:((whitespace*)?ID (whitespace)* "=" (whitespace)* ID (whitespace*)?) {
+	var line = i;
+
+    var tokLHS = line[1].join("");
+    var tokRHS = line[5].join("");
+    var type= "variableVariableAssignmentInstruction";
+    
+    return {type, tokLHS,tokRHS};
+}
+
+variableLiteralAssignmentInstruction = i:((whitespace*)? ID (whitespace)* "=" (whitespace)* stringParam (whitespace*)?) {
+	var line = i;
+	var tokRHS = "";
+    var tokLHS = line[1].join("");
+    var type= "variableLiteralAssignmentInstruction";
+    
+    line[5][1].map(function(e){
+      e.map(function(ec){
+      tokRHS += ec.join("");
+      });
+    });
+
+    return {type, tokLHS,tokRHS};
+}
 
 instruction 
 = log
