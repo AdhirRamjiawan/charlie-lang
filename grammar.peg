@@ -7,11 +7,19 @@ startrule
  = program
   
 program
-= (stringInstruction / 
+= (instructionSet /
+    comments)+
+    
+comments = c:((whitespace*)? "/*" (.[^*]*) "*/" (whitespace*)?) {
+	return {type: "comment"};
+}
+
+instructionSet =
+	stringInstruction / 
 	variableInstruction / 
 	variableVariableAssignmentInstruction / 
-	variableLiteralAssignmentInstruction)+
-  
+	variableLiteralAssignmentInstruction 
+    
 stringInstruction
 = i:((whitespace*)? instruction space+ stringParam (whitespace*)?) { 
    var line = i;
