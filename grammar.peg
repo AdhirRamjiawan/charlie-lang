@@ -13,7 +13,7 @@ program
 	variableLiteralAssignmentInstruction)+
   
 stringInstruction
-= i:((whitespace*)? instruction (space+)? stringParam (whitespace*)?) { 
+= i:((whitespace*)? instruction space+ stringParam (whitespace*)?) { 
    var line = i;
 
     var tokParam = "";
@@ -30,7 +30,7 @@ stringInstruction
  }
  
 variableInstruction
-= i:((whitespace*)? instruction (space+)? ID (whitespace*)?) { 
+= i:((whitespace*)? instruction space+ ID (whitespace*)?) { 
    var line = i;
 
     var tokParam = line[VARIABLE_INDEX].join("");

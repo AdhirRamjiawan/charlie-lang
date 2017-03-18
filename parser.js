@@ -414,9 +414,6 @@ CharlieLangParser = /*
           } else {
             s4 = peg$FAILED;
           }
-          if (s4 === peg$FAILED) {
-            s4 = null;
-          }
           if (s4 !== peg$FAILED) {
             s5 = peg$parsestringParam();
             if (s5 !== peg$FAILED) {
@@ -487,9 +484,6 @@ CharlieLangParser = /*
             }
           } else {
             s4 = peg$FAILED;
-          }
-          if (s4 === peg$FAILED) {
-            s4 = null;
           }
           if (s4 !== peg$FAILED) {
             s5 = peg$parseword();
