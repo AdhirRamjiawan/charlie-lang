@@ -185,9 +185,19 @@ CharlieLangParser = /*
         peg$c17 = peg$literalExpectation("\n", false),
         peg$c18 = "\t",
         peg$c19 = peg$literalExpectation("\t", false),
-        peg$c20 = "=",
-        peg$c21 = peg$literalExpectation("=", false),
+        peg$c20 = "show table with data",
+        peg$c21 = peg$literalExpectation("show table with data", false),
         peg$c22 = function(i) {
+         	var line = i;
+            var tokInstr = "showTable";
+            var tokDataParam = line[3].join("");
+            var type = "showTableInstruction";
+            
+         	return {type, tokInstr, tokDataParam};
+         },
+        peg$c23 = "=",
+        peg$c24 = peg$literalExpectation("=", false),
+        peg$c25 = function(i) {
         	var line = i;
 
             var tokLHS = line[1].join("");
@@ -196,7 +206,7 @@ CharlieLangParser = /*
             
             return {type, tokLHS,tokRHS};
         },
-        peg$c23 = function(i) {
+        peg$c26 = function(i) {
         	var line = i;
         	var tokRHS = "";
             var tokLHS = line[1].join("");
@@ -210,13 +220,13 @@ CharlieLangParser = /*
 
             return {type, tokLHS,tokRHS};
         },
-        peg$c24 = "\"",
-        peg$c25 = peg$literalExpectation("\"", false),
-        peg$c26 = function(p) { return p;},
-        peg$c27 = "log",
-        peg$c28 = peg$literalExpectation("log", false),
-        peg$c29 = "alert",
-        peg$c30 = peg$literalExpectation("alert", false),
+        peg$c27 = "\"",
+        peg$c28 = peg$literalExpectation("\"", false),
+        peg$c29 = function(p) { return p;},
+        peg$c30 = "log",
+        peg$c31 = peg$literalExpectation("log", false),
+        peg$c32 = "alert",
+        peg$c33 = peg$literalExpectation("alert", false),
 
         peg$currPos          = 0,
         peg$savedPos         = 0,
@@ -506,6 +516,9 @@ CharlieLangParser = /*
           s0 = peg$parsevariableVariableAssignmentInstruction();
           if (s0 === peg$FAILED) {
             s0 = peg$parsevariableLiteralAssignmentInstruction();
+            if (s0 === peg$FAILED) {
+              s0 = peg$parseshowTableInstruction();
+            }
           }
         }
       }
@@ -755,6 +768,83 @@ CharlieLangParser = /*
       return s0;
     }
 
+    function peg$parseshowTableInstruction() {
+      var s0, s1, s2, s3, s4, s5, s6, s7;
+
+      s0 = peg$currPos;
+      s1 = peg$currPos;
+      s2 = [];
+      s3 = peg$parsewhitespace();
+      while (s3 !== peg$FAILED) {
+        s2.push(s3);
+        s3 = peg$parsewhitespace();
+      }
+      if (s2 === peg$FAILED) {
+        s2 = null;
+      }
+      if (s2 !== peg$FAILED) {
+        if (input.substr(peg$currPos, 20) === peg$c20) {
+          s3 = peg$c20;
+          peg$currPos += 20;
+        } else {
+          s3 = peg$FAILED;
+          if (peg$silentFails === 0) { peg$fail(peg$c21); }
+        }
+        if (s3 !== peg$FAILED) {
+          s4 = [];
+          s5 = peg$parsewhitespace();
+          if (s5 !== peg$FAILED) {
+            while (s5 !== peg$FAILED) {
+              s4.push(s5);
+              s5 = peg$parsewhitespace();
+            }
+          } else {
+            s4 = peg$FAILED;
+          }
+          if (s4 !== peg$FAILED) {
+            s5 = peg$parseword();
+            if (s5 !== peg$FAILED) {
+              s6 = [];
+              s7 = peg$parsewhitespace();
+              while (s7 !== peg$FAILED) {
+                s6.push(s7);
+                s7 = peg$parsewhitespace();
+              }
+              if (s6 === peg$FAILED) {
+                s6 = null;
+              }
+              if (s6 !== peg$FAILED) {
+                s2 = [s2, s3, s4, s5, s6];
+                s1 = s2;
+              } else {
+                peg$currPos = s1;
+                s1 = peg$FAILED;
+              }
+            } else {
+              peg$currPos = s1;
+              s1 = peg$FAILED;
+            }
+          } else {
+            peg$currPos = s1;
+            s1 = peg$FAILED;
+          }
+        } else {
+          peg$currPos = s1;
+          s1 = peg$FAILED;
+        }
+      } else {
+        peg$currPos = s1;
+        s1 = peg$FAILED;
+      }
+      if (s1 !== peg$FAILED) {
+        peg$savedPos = s0;
+        s1 = peg$c22(s1);
+      }
+      s0 = s1;
+
+      return s0;
+    }
+
     function peg$parsevariableVariableAssignmentInstruction() {
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
@@ -780,11 +870,11 @@ CharlieLangParser = /*
           }
           if (s4 !== peg$FAILED) {
             if (input.charCodeAt(peg$currPos) === 61) {
-              s5 = peg$c20;
+              s5 = peg$c23;
               peg$currPos++;
             } else {
               s5 = peg$FAILED;
-              if (peg$silentFails === 0) { peg$fail(peg$c21); }
+              if (peg$silentFails === 0) { peg$fail(peg$c24); }
             }
             if (s5 !== peg$FAILED) {
               s6 = [];
@@ -838,7 +928,7 @@ CharlieLangParser = /*
       }
       if (s1 !== peg$FAILED) {
         peg$savedPos = s0;
-        s1 = peg$c22(s1);
+        s1 = peg$c25(s1);
       }
       s0 = s1;
 
@@ -870,11 +960,11 @@ CharlieLangParser = /*
           }
           if (s4 !== peg$FAILED) {
             if (input.charCodeAt(peg$currPos) === 61) {
-              s5 = peg$c20;
+              s5 = peg$c23;
               peg$currPos++;
             } else {
               s5 = peg$FAILED;
-              if (peg$silentFails === 0) { peg$fail(peg$c21); }
+              if (peg$silentFails === 0) { peg$fail(peg$c24); }
             }
             if (s5 !== peg$FAILED) {
               s6 = [];
@@ -928,7 +1018,7 @@ CharlieLangParser = /*
       }
       if (s1 !== peg$FAILED) {
         peg$savedPos = s0;
-        s1 = peg$c23(s1);
+        s1 = peg$c26(s1);
       }
       s0 = s1;
 
@@ -952,11 +1042,11 @@ CharlieLangParser = /*
       s0 = peg$currPos;
       s1 = peg$currPos;
       if (input.charCodeAt(peg$currPos) === 34) {
-        s2 = peg$c24;
+        s2 = peg$c27;
         peg$currPos++;
       } else {
         s2 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c25); }
+        if (peg$silentFails === 0) { peg$fail(peg$c28); }
       }
       if (s2 !== peg$FAILED) {
         s3 = [];
@@ -1011,11 +1101,11 @@ CharlieLangParser = /*
         }
         if (s3 !== peg$FAILED) {
           if (input.charCodeAt(peg$currPos) === 34) {
-            s4 = peg$c24;
+            s4 = peg$c27;
             peg$currPos++;
           } else {
             s4 = peg$FAILED;
-            if (peg$silentFails === 0) { peg$fail(peg$c25); }
+            if (peg$silentFails === 0) { peg$fail(peg$c28); }
           }
           if (s4 !== peg$FAILED) {
             s2 = [s2, s3, s4];
@@ -1034,7 +1124,7 @@ CharlieLangParser = /*
       }
       if (s1 !== peg$FAILED) {
         peg$savedPos = s0;
-        s1 = peg$c26(s1);
+        s1 = peg$c29(s1);
       }
       s0 = s1;
 
@@ -1044,12 +1134,12 @@ CharlieLangParser = /*
     function peg$parselog() {
       var s0;
 
-      if (input.substr(peg$currPos, 3) === peg$c27) {
-        s0 = peg$c27;
+      if (input.substr(peg$currPos, 3) === peg$c30) {
+        s0 = peg$c30;
         peg$currPos += 3;
       } else {
         s0 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c28); }
+        if (peg$silentFails === 0) { peg$fail(peg$c31); }
       }
 
       return s0;
@@ -1058,12 +1148,12 @@ CharlieLangParser = /*
     function peg$parsealert() {
       var s0;
 
-      if (input.substr(peg$currPos, 5) === peg$c29) {
-        s0 = peg$c29;
+      if (input.substr(peg$currPos, 5) === peg$c32) {
+        s0 = peg$c32;
         peg$currPos += 5;
       } else {
         s0 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c30); }
+        if (peg$silentFails === 0) { peg$fail(peg$c33); }
       }
 
       return s0;

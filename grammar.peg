@@ -18,7 +18,8 @@ instructionSet =
 	stringInstruction / 
 	variableInstruction / 
 	variableVariableAssignmentInstruction / 
-	variableLiteralAssignmentInstruction 
+	variableLiteralAssignmentInstruction /
+    showTableInstruction
     
 stringInstruction
 = i:((whitespace*)? instruction space+ stringParam (whitespace*)?) { 
@@ -60,6 +61,16 @@ whitespace = " "
 space = " "
 
 newline = "\n"
+
+showTableInstruction 
+ = i:((whitespace*)? "show table with data" (whitespace)+ ID (whitespace*)?) {
+ 	var line = i;
+    var tokInstr = "showTable";
+    var tokDataParam = line[3].join("");
+    var type = "showTableInstruction";
+    
+ 	return {type, tokInstr, tokDataParam};
+ }
 
 variableVariableAssignmentInstruction = i:((whitespace*)?ID (whitespace)* "=" (whitespace)* ID (whitespace*)?) {
 	var line = i;

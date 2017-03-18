@@ -9,12 +9,19 @@
 <div id="test_script" style="display:none;">
     
     /* This is a charlie-lang script */
+
     testVar = "Adhir Ramjiawan"
     alertMsg = testVar
+    tableData = ""
 
     log "Hello world"
     log testVar
     alert alertMsg
+
+    /*
+        create table of data
+    */
+    show table with data tableData
 </div>
 <script type="text/javascript">
     var script = document.getElementById("test_script").innerHTML;
@@ -63,6 +70,15 @@
                 }
 
                 alertFunc(message);
+            } else if (e.tokInstr && e.tokInstr === 'showTable') {
+                var existingVariable = findVariable(e.tokDataParam);
+
+                if (!existingVariable) {
+                    console.error("unknown variable: " + e.tokDataParam);
+                    return;
+                }
+
+                showTableFunc(existingVariable);
             } else if (e.type && e.type === 'variableLiteralAssignmentInstruction') {
                 var newVar = createVariable(e.tokLHS, "literal", e.tokRHS);
                 variables.push(newVar);
@@ -107,6 +123,10 @@
 
     function alertFunc(message) {
         alert(message);
+    }
+
+    function showTableFunc(data) {
+        console.log(data);
     }
 </script>
 </body>
