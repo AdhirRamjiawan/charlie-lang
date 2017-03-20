@@ -19,6 +19,7 @@ instructionSet =
 	variableInstruction / 
 	variableVariableAssignmentInstruction / 
 	variableLiteralAssignmentInstruction /
+    variableJsonAssignmentInstruction /
     showTableInstruction
     
 stringInstruction
@@ -97,6 +98,15 @@ variableLiteralAssignmentInstruction = i:((whitespace*)? ID (whitespace)* "=" (w
     return {type, tokLHS,tokRHS};
 }
 
+variableJsonAssignmentInstruction 
+ = i:((whitespace*)? ID (whitespace)* "=" (whitespace)* jsonParam (whitespace*)?) {
+ 	var line = i;
+    
+    
+    
+ 	return line;
+ }
+
 instruction 
 = log
  /alert
@@ -104,6 +114,26 @@ instruction
 ID = word
 
 stringParam = p:('"' (word (space*)?)* '"') { return p;}
+
+jsonPropertyRHS =
+p: ((whitespace)* (('"' (word (space*)?)* '"') / ('"' space* '"') / jsonObject / jsonArray) (whitespace)*)
+{ return p; }
+
+jsonProperty = 
+p:( (whitespace)* '"' (word (space*)?)* '"' (whitespace)* ':'  jsonPropertyRHS) 
+{ return p;}
+
+jsonObject = 
+p:("{" (jsonProperty (",")?)* "}")
+{ return p;}
+
+jsonArray =
+p: ("[" (jsonArray / jsonObject)* "]")
+{ return p; }
+ 
+jsonParam = p:('' (jsonArray / jsonObject)* '') { 
+	return p;
+}
 
 log = "log"
 alert = "alert"

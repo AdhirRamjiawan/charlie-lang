@@ -12,7 +12,9 @@
 
     testVar = "Adhir Ramjiawan"
     alertMsg = testVar
+    /*tableData = { "Name" : "Adhir"}*/
     tableData = ""
+
 
     log "Hello world"
     log testVar
@@ -126,7 +128,24 @@
     }
 
     function showTableFunc(data) {
-        console.log(data);
+        var table = "<table>";
+
+        if (data.value) {
+            data.value.map(function(e){
+                table += "<tr>";
+
+                e.map(function(ie){
+                    table += "<td>";
+                    table += "ie";    
+                    table += "</td>";
+                });
+
+                table += "</tr>";
+            });
+
+            table += "</table>";
+            document.write(table);
+        }
     }
 </script>
 </body>
