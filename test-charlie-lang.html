@@ -12,9 +12,28 @@
 
     testVar = "Adhir Ramjiawan"
     alertMsg = testVar
-    /*tableData = { "Name" : "Adhir"}*/
-    tableData = ""
+    tableData = {
+        "headers": ["name", "age"],
+        "values": [
+            ["Adhir Ramjiawan", 123],
+            ["Adhir Naidoo", 3]
+        ] 
+    }
 
+    tableData2 = {
+        "headers": ["name", "age"],
+        "values": [
+            ["Adhir Ramjiawan", 123],
+            ["Adhir Ramjiawan", 123],
+            ["Adhir Ramjiawan", 123],
+            ["Adhir Ramjiawan", 123],
+            ["Adhir Ramjiawan", 123],
+            ["Adhir Ramjiawan", 123],
+            ["Adhir Ramjiawan", 123],
+            ["Adhir Ramjiawan", 123],
+            ["Adhir Naidoo", 3]
+        ] 
+    }
 
     log "Hello world"
     log testVar
@@ -24,6 +43,7 @@
         create table of data
     */
     show table with data tableData
+    show table with data tableData2
 </div>
 <script type="text/javascript">
     var script = document.getElementById("test_script").innerHTML;
@@ -80,9 +100,12 @@
                     return;
                 }
 
-                showTableFunc(existingVariable);
+                showTableFunc(existingVariable.value);
             } else if (e.type && e.type === 'variableLiteralAssignmentInstruction') {
                 var newVar = createVariable(e.tokLHS, "literal", e.tokRHS);
+                variables.push(newVar);
+            } else if (e.type && e.type === 'variableJsonLiteralAssignmentInstruction') {
+                var newVar = createVariable(e.tokLHS, "jsonLiteral", e.tokRHS);
                 variables.push(newVar);
             } else if (e.type && e.type === 'variableVariableAssignmentInstruction') {
                 var newVar = null;
@@ -130,21 +153,34 @@
     function showTableFunc(data) {
         var table = "<table>";
 
-        if (data.value) {
-            data.value.map(function(e){
-                table += "<tr>";
+        if (data.headers) {
+            table += "<tr>";
 
-                e.map(function(ie){
-                    table += "<td>";
-                    table += "ie";    
-                    table += "</td>";
-                });
-
-                table += "</tr>";
+            data.headers.map(function(h){
+                table += "<th>";
+                table += h;    
+                table += "</th>";
             });
 
-            table += "</table>";
-            document.write(table);
+            table += "</tr>";
+
+            if (data.values) {
+
+                data.values.map(function(row){
+                    table += "<tr>";
+
+                    row.map(function(col){
+                        table += "<td>";
+                        table += col;    
+                        table += "</td>";
+                    });
+
+                    table += "</tr>";
+                });
+
+                table += "</table>";
+                document.write(table);
+            }
         }
     }
 </script>
